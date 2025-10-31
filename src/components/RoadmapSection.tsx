@@ -54,8 +54,10 @@ export default function RoadmapSection() {
   const step = roadmapSteps[currentStep];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-gray-50">
-      <div className="max-w-4xl mx-auto px-6">
+    <section className="py-24 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(33,92,154,0.05),transparent_50%),radial-gradient(circle_at_70%_80%,rgba(255,92,53,0.05),transparent_50%)]"></div>
+
+      <div className="relative max-w-5xl mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
             Your Roadmap to Success
@@ -76,17 +78,17 @@ export default function RoadmapSection() {
               <ChevronLeft className="w-6 h-6" />
             </button>
 
-            <div className="flex-1 bg-white rounded-2xl p-12 shadow-lg border border-gray-100">
+            <div className="flex-1 bg-white rounded-3xl p-12 shadow-2xl border-2 border-gray-100 hover:border-[#ff5c35]/30 transition-all duration-300">
               <div className="flex items-start gap-8">
-                <div className="flex-shrink-0 rounded-xl p-4" style={{ backgroundColor: step.color }}>
-                  <step.icon className="w-12 h-12 text-white" />
+                <div className="flex-shrink-0 rounded-2xl p-5 shadow-lg" style={{ backgroundColor: step.color }}>
+                  <step.icon className="w-14 h-14 text-white" />
                 </div>
                 <div className="flex-1">
-                  <div className="text-sm font-bold mb-2" style={{ color: step.color }}>
+                  <div className="text-xs font-bold mb-3 tracking-widest" style={{ color: step.color }}>
                     STEP {currentStep + 1} OF {roadmapSteps.length}
                   </div>
-                  <h3 className="text-4xl font-bold text-slate-900 mb-4">{step.title}</h3>
-                  <p className="text-lg text-gray-600 leading-relaxed">{step.description}</p>
+                  <h3 className="text-5xl font-extrabold text-slate-900 mb-5">{step.title}</h3>
+                  <p className="text-xl text-gray-600 leading-relaxed">{step.description}</p>
                 </div>
               </div>
             </div>
@@ -101,13 +103,15 @@ export default function RoadmapSection() {
             </button>
           </div>
 
-          <div className="flex justify-center gap-2 mt-8">
+          <div className="flex justify-center gap-3 mt-10">
             {roadmapSteps.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentStep(index)}
-                className="w-2 h-2 rounded-full transition-all duration-300"
+                className="rounded-full transition-all duration-300 hover:scale-125"
                 style={{
+                  width: index === currentStep ? '32px' : '12px',
+                  height: '12px',
                   backgroundColor: index === currentStep ? '#ff5c35' : '#d1d5db',
                 }}
                 aria-label={`Go to step ${index + 1}`}

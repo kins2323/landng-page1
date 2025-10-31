@@ -1,4 +1,4 @@
-import { Star } from 'lucide-react';
+import { Star, Quote } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 const reviews = [
@@ -76,14 +76,20 @@ export default function ReviewsSection() {
   const allReviews = [...reviews, ...reviews, ...reviews];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 mb-12">
+    <section className="py-24 bg-gradient-to-b from-white via-gray-50 to-white overflow-hidden relative">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,92,53,0.03),transparent_70%)]"></div>
+
+      <div className="relative max-w-7xl mx-auto px-6 mb-16">
         <div className="text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
-            Success Stories
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-full px-6 py-2 mb-6">
+            <Star className="w-5 h-5 fill-green-600 text-green-600" />
+            <span className="text-sm font-bold text-green-900">1000+ VERIFIED SUCCESS STORIES</span>
+          </div>
+          <h2 className="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6">
+            Real People, Real Results
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Join hundreds of freelancers who've landed their first clients
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Don't just take our word for it - hear from freelancers who transformed their careers and landed their first clients
           </p>
         </div>
       </div>
@@ -98,27 +104,29 @@ export default function ReviewsSection() {
         {allReviews.map((review, index) => (
           <div
             key={index}
-            className="flex-shrink-0 w-[350px] bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300"
+            className="flex-shrink-0 w-[400px] bg-white rounded-2xl p-8 shadow-xl border-2 border-gray-100 hover:shadow-2xl hover:border-[#ff5c35]/30 transition-all duration-300 hover:scale-105"
           >
-            <div className="flex items-center gap-4 mb-4">
-              <img
-                src={review.image}
-                alt={review.name}
-                className="w-12 h-12 rounded-full object-cover"
-              />
-              <div>
-                <h4 className="font-semibold text-slate-900">{review.name}</h4>
-                <p className="text-sm text-gray-600">{review.role}</p>
-              </div>
-            </div>
+            <Quote className="w-10 h-10 text-[#ff5c35]/20 mb-4" />
 
-            <div className="flex gap-1 mb-3">
+            <div className="flex gap-1 mb-4">
               {[...Array(review.rating)].map((_, i) => (
-                <Star key={i} className="w-4 h-4 fill-[#ff5c35] text-[#ff5c35]" />
+                <Star key={i} className="w-5 h-5 fill-[#ff5c35] text-[#ff5c35]" />
               ))}
             </div>
 
-            <p className="text-gray-700 leading-relaxed">{review.text}</p>
+            <p className="text-gray-700 leading-relaxed mb-6 text-base">{review.text}</p>
+
+            <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
+              <img
+                src={review.image}
+                alt={review.name}
+                className="w-14 h-14 rounded-full object-cover ring-2 ring-[#ff5c35]/20"
+              />
+              <div>
+                <h4 className="font-bold text-slate-900 text-base">{review.name}</h4>
+                <p className="text-sm text-gray-600 font-medium">{review.role}</p>
+              </div>
+            </div>
           </div>
         ))}
       </div>
