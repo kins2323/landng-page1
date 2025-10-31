@@ -1,5 +1,4 @@
-import { Target, Zap, Users, Rocket, TrendingUp, Award, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import { Target, Zap, Users, Rocket, TrendingUp, Award, ArrowRight } from 'lucide-react';
 
 const roadmapSteps = [
   {
@@ -41,23 +40,11 @@ const roadmapSteps = [
 ];
 
 export default function RoadmapSection() {
-  const [currentStep, setCurrentStep] = useState(0);
-
-  const handleNext = () => {
-    setCurrentStep((prev) => (prev + 1) % roadmapSteps.length);
-  };
-
-  const handlePrev = () => {
-    setCurrentStep((prev) => (prev - 1 + roadmapSteps.length) % roadmapSteps.length);
-  };
-
-  const step = roadmapSteps[currentStep];
-
   return (
     <section className="py-24 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(33,92,154,0.05),transparent_50%),radial-gradient(circle_at_70%_80%,rgba(255,92,53,0.05),transparent_50%)]"></div>
 
-      <div className="relative max-w-5xl mx-auto px-6">
+      <div className="relative max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
             Your Roadmap to Success
@@ -68,54 +55,40 @@ export default function RoadmapSection() {
         </div>
 
         <div className="relative">
-          <div className="flex items-center justify-between gap-8">
-            <button
-              onClick={handlePrev}
-              className="flex-shrink-0 p-3 rounded-full border-2 transition-all duration-300 hover:scale-110"
-              style={{ borderColor: '#215c9a', color: '#215c9a' }}
-              aria-label="Previous step"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
+          <div className="hidden md:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-[#215c9a] via-[#ff5c35] to-[#215c9a] transform -translate-y-1/2 opacity-20"></div>
 
-            <div className="flex-1 bg-white rounded-3xl p-12 shadow-2xl border-2 border-gray-100 hover:border-[#ff5c35]/30 transition-all duration-300">
-              <div className="flex items-start gap-8">
-                <div className="flex-shrink-0 rounded-2xl p-5 shadow-lg" style={{ backgroundColor: step.color }}>
-                  <step.icon className="w-14 h-14 text-white" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-xs font-bold mb-3 tracking-widest" style={{ color: step.color }}>
-                    STEP {currentStep + 1} OF {roadmapSteps.length}
-                  </div>
-                  <h3 className="text-5xl font-extrabold text-slate-900 mb-5">{step.title}</h3>
-                  <p className="text-xl text-gray-600 leading-relaxed">{step.description}</p>
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={handleNext}
-              className="flex-shrink-0 p-3 rounded-full border-2 transition-all duration-300 hover:scale-110"
-              style={{ borderColor: '#ff5c35', backgroundColor: '#ff5c35', color: 'white' }}
-              aria-label="Next step"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-          </div>
-
-          <div className="flex justify-center gap-3 mt-10">
-            {roadmapSteps.map((_, index) => (
-              <button
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {roadmapSteps.map((step, index) => (
+              <div
                 key={index}
-                onClick={() => setCurrentStep(index)}
-                className="rounded-full transition-all duration-300 hover:scale-125"
-                style={{
-                  width: index === currentStep ? '32px' : '12px',
-                  height: '12px',
-                  backgroundColor: index === currentStep ? '#ff5c35' : '#d1d5db',
-                }}
-                aria-label={`Go to step ${index + 1}`}
-              />
+                className="relative group"
+              >
+                <div className="absolute -inset-2 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500"></div>
+
+                <div className="relative bg-white rounded-2xl p-8 shadow-xl border-2 border-gray-100 hover:border-[#ff5c35]/40 transition-all duration-300 hover:scale-105 hover:shadow-2xl h-full flex flex-col">
+                  <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full flex items-center justify-center font-bold text-white shadow-lg" style={{ backgroundColor: step.color }}>
+                    {index + 1}
+                  </div>
+
+                  <div className="flex-shrink-0 rounded-xl p-4 mb-6 inline-flex self-start shadow-lg" style={{ backgroundColor: step.color }}>
+                    <step.icon className="w-10 h-10 text-white" />
+                  </div>
+
+                  <h3 className="text-2xl font-bold text-slate-900 mb-3">{step.title}</h3>
+                  <p className="text-gray-600 leading-relaxed flex-grow">{step.description}</p>
+
+                  <div className="mt-6 flex items-center gap-2 font-semibold text-sm" style={{ color: step.color }}>
+                    <span>Learn More</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+
+                {index < roadmapSteps.length - 1 && (
+                  <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-8 transform -translate-y-1/2 z-10">
+                    <ArrowRight className="w-8 h-8" style={{ color: step.color, opacity: 0.3 }} />
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </div>
