@@ -3,6 +3,7 @@ import VideoSection from './components/VideoSection';
 import RoadmapSection from './components/RoadmapSection';
 import PricingSection from './components/PricingSection';
 import ReviewsSection from './components/ReviewsSection';
+import NewsletterSection from './components/NewsletterSection';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <RoadmapSection />
       <PricingSection />
       <ReviewsSection />
+      <NewsletterSection />
     </div>
   );
 }

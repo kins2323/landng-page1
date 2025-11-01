@@ -57,7 +57,7 @@ export default function ReviewsSection() {
         <div className="text-center">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-full px-6 py-2 mb-6">
             <Star className="w-5 h-5 fill-green-600 text-green-600" />
-            <span className="text-sm font-bold text-green-900">1000+ VERIFIED SUCCESS STORIES</span>
+            <span className="text-sm font-bold text-green-900">VERIFIED SUCCESS STORIES</span>
           </div>
           <h2 className="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6">
             Real People, Real Results
@@ -98,12 +98,12 @@ export default function ReviewsSection() {
               <img
                 src={review.image}
                 alt={`Customer testimonial from ${review.platform}`}
-                className="w-full h-[500px] object-cover object-top"
+                className="w-full h-auto object-contain"
                 loading="lazy"
               />
 
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white/95 to-transparent p-6">
-                <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white/30 via-transparent to-transparent p-3">
+                <div className="flex items-center gap-2 text-sm font-semibold text-gray-900 drop-shadow-lg">
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
                   Verified Review
                 </div>
@@ -126,14 +126,17 @@ export default function ReviewsSection() {
               Your Success Story Awaits
             </h3>
             <p className="text-xl text-white/95 mb-8 leading-relaxed max-w-2xl mx-auto">
-              Join 1000+ freelancers who landed their first client within 90 days. Add your review after achieving your goals!
+              Join early when it's too early. Our dream is teaching 1000+ people - be part of this journey from the start. Add your review after achieving your goals!
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button className="group bg-white text-[#ff5c35] px-10 py-5 rounded-xl font-bold text-lg shadow-2xl hover:shadow-[0_10px_40px_rgba(255,255,255,0.3)] transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3 min-w-[240px]">
+              <a 
+                href="https://theclosecode.co.ke/courses/?utm_source=landing_page"
+                className="group bg-white text-[#ff5c35] px-10 py-5 rounded-xl font-bold text-lg shadow-2xl hover:shadow-[0_10px_40px_rgba(255,255,255,0.3)] transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3 min-w-[240px]"
+              >
                 Start Your Journey
                 <Star className="w-6 h-6 group-hover:rotate-12 transition-transform" />
-              </button>
+              </a>
             </div>
 
             <div className="mt-8 inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-full px-6 py-3">
@@ -144,7 +147,7 @@ export default function ReviewsSection() {
                 <div className="w-8 h-8 rounded-full border-2 border-white bg-gradient-to-br from-pink-400 to-pink-600"></div>
               </div>
               <span className="text-white font-semibold text-sm">
-                Join 1000+ who already started
+                Join the train early - before it's too late
               </span>
             </div>
           </div>

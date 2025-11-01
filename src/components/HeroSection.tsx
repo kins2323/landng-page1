@@ -10,7 +10,7 @@ export default function HeroSection() {
           <div>
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-[#ff5c35] rounded-full px-5 py-3 mb-8 shadow-lg shadow-[#ff5c35]/20">
               <Users className="w-5 h-5" style={{ color: '#ff5c35' }} />
-              <span className="text-sm font-bold text-slate-900">Join 1,000+ Aspiring Freelancers</span>
+              <span className="text-sm font-bold text-slate-900">Join Early - Get Ahead Before Everyone Does</span>
             </div>
 
             <h1 className="text-5xl lg:text-7xl font-extrabold leading-tight mb-6 text-slate-900">
@@ -27,7 +27,7 @@ export default function HeroSection() {
             <div className="space-y-3 mb-12">
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0" />
-                <span className="text-lg text-gray-700">Proven framework used by 1000+ freelancers</span>
+                <span className="text-lg text-gray-700">Proven framework to help you land your first client</span>
               </div>
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0" />
@@ -40,14 +40,20 @@ export default function HeroSection() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <button className="group bg-gradient-to-r from-[#ff5c35] to-[#ff7a5c] text-white px-10 py-5 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3">
+              <a 
+                href="https://theclosecode.co.ke/courses/?utm_source=landing_page"
+                className="group bg-gradient-to-r from-[#ff5c35] to-[#ff7a5c] text-white px-10 py-5 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3"
+              >
                 Start Your Journey
                 <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button className="group bg-white border-2 border-[#215c9a] text-[#215c9a] px-10 py-5 rounded-xl font-bold text-lg hover:bg-[#215c9a] hover:text-white shadow-lg transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3">
+              </a>
+              <a 
+                href="#"
+                className="group bg-white border-2 border-[#215c9a] text-[#215c9a] px-10 py-5 rounded-xl font-bold text-lg hover:bg-[#215c9a] hover:text-white shadow-lg transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3"
+              >
                 Join Community
                 <Users className="w-6 h-6" />
-              </button>
+              </a>
             </div>
 
             <div className="flex items-center gap-6 flex-wrap">
@@ -64,7 +70,7 @@ export default function HeroSection() {
                       <Star key={i} className="w-4 h-4 fill-[#ff5c35] text-[#ff5c35]" />
                     ))}
                   </div>
-                  <p className="text-sm text-gray-600 font-semibold">1000+ Success Stories</p>
+                  <p className="text-sm text-gray-600 font-semibold">Real Success Stories</p>
                 </div>
               </div>
             </div>
@@ -83,8 +89,8 @@ export default function HeroSection() {
                   <CheckCircle2 className="w-8 h-8 text-green-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-slate-900">1000+</p>
-                  <p className="text-sm text-gray-600 font-semibold">Clients Landed</p>
+                  <p className="text-2xl font-bold text-slate-900">Our Dream</p>
+                  <p className="text-sm text-gray-600 font-semibold">Teaching 1000+ People</p>
                 </div>
               </div>
             </div>
