@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 interface Card {
@@ -13,11 +13,15 @@ interface CardSliderProps {
   cards: Card[];
   onCardClick: (card: Card) => void;
   direction?: "left" | "right";
+  auto?: boolean;
+  speedPxPerSecond?: number; // animation speed
 }
 
-export default function CardSlider({ cards, onCardClick }: CardSliderProps) {
-  const [isPaused] = useState(false);
+export default function CardSlider({ cards, onCardClick, auto = true, speedPxPerSecond = 40 }: CardSliderProps) {
+  const [isPaused, setIsPaused] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const animationRef = useRef<number | null>(null);
+  const lastTsRef = useRef<number | null>(null);
 
   const scrollByAmount = (direction: "next" | "prev") => {
     const container = containerRef.current;
@@ -26,20 +30,53 @@ export default function CardSlider({ cards, onCardClick }: CardSliderProps) {
     container.scrollBy({ left: delta, behavior: "smooth" });
   };
 
+  // Auto-scroll ticker with seamless loop via duplicated content
+  useEffect(() => {
+    if (!auto) return;
+    const container = containerRef.current;
+    if (!container) return;
+
+    const step = (ts: number) => {
+      if (isPaused) {
+        lastTsRef.current = ts;
+      } else {
+        const last = lastTsRef.current ?? ts;
+        const dt = Math.min(64, ts - last); // clamp to avoid jumps on tab refocus
+        const dx = (speedPxPerSecond * dt) / 1000;
+        container.scrollLeft += dx;
+        const half = container.scrollWidth / 2; // because content is duplicated once
+        if (container.scrollLeft >= half) {
+          container.scrollLeft -= half;
+        }
+        lastTsRef.current = ts;
+      }
+      animationRef.current = requestAnimationFrame(step);
+    };
+
+    animationRef.current = requestAnimationFrame(step);
+    return () => {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+      lastTsRef.current = null;
+    };
+  }, [auto, isPaused, speedPxPerSecond]);
+
   return (
     <div className="space-y-6">
       <div className="relative">
         <div
           ref={containerRef}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
           className="flex gap-6 px-4 overflow-x-auto overflow-y-hidden snap-x snap-mandatory scroll-px-4 [-ms-overflow-style:none] [scrollbar-width:none]"
           style={{ WebkitOverflowScrolling: "touch" }}
         >
           {/* hide scrollbar but keep scrollable */}
           {/* @ts-ignore */}
           <style>{`.no-scrollbar::-webkit-scrollbar{display:none}`}</style>
-          {cards.map((card) => (
+          {[...cards, ...cards].map((card, idx) => (
             <div
-              key={card.id}
+              key={`${card.id}-${idx}`}
               className="flex-shrink-0 w-[260px] sm:w-80 md:w-96 cursor-pointer group snap-start"
               onClick={() => onCardClick(card)}
             >

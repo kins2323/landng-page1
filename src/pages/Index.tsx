@@ -267,7 +267,7 @@ const Index = () => {
 
                 <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
 
-                <span className="text-sm font-semibold text-primary">Trusted by 250+ Businesses</span>
+                <span className="text-sm font-semibold text-primary">Trusted by 25+ Businesses</span>
 
               </div>
 
@@ -275,7 +275,7 @@ const Index = () => {
 
               <h1 className="text-6xl lg:text-8xl font-black leading-[0.95] tracking-tight text-secondary" style={{ textShadow: '0 2px 4px rgba(255,255,255,0.1)' }}>
 
-                Strategize. Market. Automate.
+                I Strategize, Market, and Automate Bussiness.
 
               </h1>
 
@@ -717,13 +717,13 @@ const Index = () => {
 
               <span className="w-2 h-2 bg-accent rounded-full"></span>
 
-              <span className="text-sm font-semibold text-accent">What We Offer</span>
+              <span className="text-sm font-semibold text-accent">What I'm Proud Of</span>
 
             </div>
 
             <h2 className="text-5xl lg:text-6xl font-black mb-4 leading-tight text-secondary">
 
-              Services That Scale
+              I Marketing
 
             </h2>
 
@@ -777,13 +777,13 @@ const Index = () => {
 
               <span className="w-2 h-2 bg-primary rounded-full"></span>
 
-              <span className="text-sm font-semibold text-primary">Automate Everything</span>
+              <span className="text-sm font-semibold text-primary">Results I'm Proud Of</span>
 
             </div>
 
             <h2 className="text-5xl lg:text-6xl font-black mb-4 leading-tight text-secondary">
 
-              Work While You <span className="text-primary">Sleep</span>
+              In AI & Automation
 
             </h2>
 
@@ -837,11 +837,11 @@ const Index = () => {
 
               <span className="w-2 h-2 bg-secondary rounded-full"></span>
 
-              <span className="text-sm font-semibold text-secondary">Modern Stack</span>
+              <span className="text-sm font-semibold text-secondary">Tools at My Fingertips</span>
 
             </div>
 
-            <h2 className="text-5xl lg:text-6xl font-black mb-4 leading-tight">Tools & Tech Stack</h2>
+            <h2 className="text-5xl lg:text-6xl font-black mb-4 leading-tight">Tools at My Fingertips</h2>
 
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
 
@@ -871,7 +871,7 @@ const Index = () => {
               ]}
 
               direction="left"
-              duration={4}
+              duration={24}
 
             />
 
@@ -892,7 +892,7 @@ const Index = () => {
               ]}
 
               direction="right"
-              duration={4}
+              duration={24}
 
             />
 
@@ -913,7 +913,7 @@ const Index = () => {
               ]}
 
               direction="left"
-              duration={4}
+              duration={24}
 
             />
 
@@ -934,7 +934,7 @@ const Index = () => {
               ]}
 
               direction="right"
-              duration={4}
+              duration={24}
 
             />
 
@@ -955,7 +955,7 @@ const Index = () => {
               ]}
 
               direction="left"
-              duration={4}
+              duration={24}
 
             />
 
