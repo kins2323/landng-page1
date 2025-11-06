@@ -374,11 +374,11 @@ const Index = () => {
 
       title: "web development",
 
-      description: "I design websites with a focus on user experience and conversion rate optimization",
+      description: "I'm comfortable building websites on Wix, HubSpot, and WordPress just tell me your platform of choice.",
 
       image: "https://kinovadigitalmarketing.com/hubfs/portifolio/brian%20kinavusha%20web%20dev.png",
 
-      details: "Content is king, and we're master storytellers. We develop comprehensive content strategies including blog posts, videos, whitepapers, and case studies. Each piece is designed to educate your audience and position you as an industry authority.",
+      details: "Building a website takes more than dragging blocks around—it takes clarity, structure, and purpose. I've created eCommerce, business, and personal sites that not only look great but actually convert. Tell me what you need, and I'll handle the rest.",
 
     },
 
@@ -388,11 +388,11 @@ const Index = () => {
 
       title: "SEO & Keywords",
 
-      description: "Rank higher on Google with data-driven keyword strategies",
+      description: "A successful website should show up when people search for what you offer.",
 
       image: "https://kinovadigitalmarketing.com/hubfs/portifolio/brian%20kinavusha%20seo&keywords.png",
 
-      details: "Our SEO expertise helps you dominate search results. We conduct comprehensive keyword research, optimize on-page elements, build high-quality backlinks, and create content strategies that rank. With our proven methodology, we've helped businesses increase organic traffic by 300%+ within 6 months.",
+      details: "Getting your site to rank and attract the right visitors can be tough but that's where I come in. Over the years, I've built systems that turn websites into discoverable, revenue-driving assets. Let's make your site part of your customer's journey not just a digital brochure.",
 
     },
 
@@ -402,11 +402,11 @@ const Index = () => {
 
       title: "Social Media Strategy",
 
-      description: "Build engaged communities across all major platforms",
+      description: "Social media is the new currency but creating content that actually sells takes more than trends.",
 
       image: "https://kinovadigitalmarketing.com/hubfs/portifolio/brian%20kinavusha%20social%20media.jpg",
 
-      details: "We craft social media strategies that convert followers into customers. From content calendars to community management, we handle everything. Our approach focuses on engagement-first content that builds trust and loyalty with your audience.",
+      details: "From Facebook and Instagram to TikTok, I create campaigns and videos that connect, convert, and stay true to your brand. My focus: turning your followers into buyers, not just likes into noise.",
 
     },
 
@@ -416,11 +416,11 @@ const Index = () => {
 
       title: "Paid Advertising",
 
-      description: "Profitable ads that generate immediate revenue",
+      description: "Ads shouldn't drain your budget they should multiply it.",
 
       image: "https://kinovadigitalmarketing.com/hubfs/portifolio/goole%20ads.png",
 
-      details: "Master Google, Meta, and LinkedIn ads with our expert team. We create high-converting ad campaigns with optimal ROAS. Every dollar spent is tracked and optimized for maximum return. Typical clients see 5:1 to 10:1 return on ad spend.",
+      details: "I plan, launch, and optimize paid campaigns that focus on ROI, not reach for the sake of it. Whether it's Meta Ads, Google, or TikTok, I help you attract the right audience and convert attention into sales.",
 
     },
 
@@ -430,11 +430,11 @@ const Index = () => {
 
       title: "Lead Generation",
 
-      description: "Build a pipeline of qualified leads ready to buy",
+      description: "Your next client is already looking for you they just need to find the right path.",
 
       image: "https://kinovadigitalmarketing.com/hubfs/portifolio/brian%20kinavusha%20lead%20gen.png",
 
-      details: "Generate high-quality leads consistently with our proven lead generation funnels. We use targeted ads, landing pages, and nurture sequences to attract and convert your ideal customers. Our systems produce 10+ qualified leads weekly for our clients.",
+      details: "I create funnels and strategies that attract qualified leads, not just numbers. From awareness to automation, I help you build predictable pipelines that convert curiosity into clients.",
 
     },
 
@@ -444,11 +444,11 @@ const Index = () => {
 
       title: "Email Marketing",
 
-      description: "Convert subscribers into loyal, repeat customers",
+      description: "Emails still sell when they're done right.",
 
       image: "https://kinovadigitalmarketing.com/hubfs/portifolio/email%20marketing.png",
 
-      details: "Email remains one of the highest ROI marketing channels. We build segmented lists, create compelling sequences, and automate campaigns. Our email funnels generate consistent revenue with 30-50% open rates and 5-10% conversion rates.",
+      details: "From nurturing sequences to product launches, I craft email campaigns that feel human but drive results. I combine automation with storytelling to keep your audience engaged and your sales pipeline warm.",
 
     },
 
@@ -572,7 +572,7 @@ const Index = () => {
 
             {/* Left Column - Text */}
 
-            <div className="flex-1 max-w-2xl space-y-8 lg:space-y-10 animate-fade-in">
+            <div className="flex-1 max-w-2xl space-y-10 animate-fade-in">
 
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20">
 
@@ -584,14 +584,14 @@ const Index = () => {
 
 
 
-              <h1 className="text-6xl lg:text-8xl font-black leading-[1.05] lg:leading-[0.95] tracking-tight text-secondary" style={{ textShadow: '0 2px 4px rgba(255,255,255,0.1)' }}>
+              <h1 className="text-6xl lg:text-8xl font-black leading-[1.05] tracking-tight text-secondary" style={{ textShadow: '0 2px 4px rgba(255,255,255,0.1)' }}>
 
                 I Strategize, Market, and Automate Business.
 
               </h1>
 
 
-              <p className="text-xl lg:text-2xl text-muted-foreground font-medium max-w-xl leading-[1.7] lg:leading-relaxed space-y-3">
+              <p className="text-xl lg:text-2xl text-muted-foreground font-medium max-w-xl leading-[1.7] space-y-3">
   <strong>Hi, I'm Brian Kinavusha.</strong><br />
   <span className="block mt-2">I've got this obsession with turning messy marketing problems into clean, well-articulated, sales-driven messages with a touch of analytics.</span><br />
   <span className="block mt-2">I'd love to be part of your next project. Take a look at some of my recent work below.</span>
@@ -629,19 +629,23 @@ const Index = () => {
 
                   variant="outline"
 
-                  onClick={() => setShowFreelancerModal(true)}
+                  asChild
 
                   className="text-base sm:text-lg px-8 py-6 h-auto rounded-lg font-semibold border-2 border-secondary/20 hover:border-secondary hover:bg-secondary/5 flex items-center gap-3 group bg-white transition-all shadow-md hover:shadow-lg"
                 >
+                  <a
+                    href="https://theclosecode.co.ke/?utm_source=portfolio"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span>Pick My Brains</span>
 
-                  <span>Pick My Brains</span>
+                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 
-                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
 
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-
-                  </svg>
-
+                    </svg>
+                  </a>
                 </Button>
 
               </div>
@@ -1182,7 +1186,7 @@ const Index = () => {
                 { name: "LinkedIn", url: "https://cdn.jsdelivr.net/gh/gilbarbara/logos/logos/linkedin.svg" },
                 { name: "TikTok", url: "https://1000logos.net/wp-content/uploads/2019/06/Tiktok_Logo.png" },
                 { name: "YouTube", url: "https://cdn.jsdelivr.net/gh/gilbarbara/logos/logos/youtube.svg" },
-                { name: "Twitter", url: "https://cdn.jsdelivr.net/gh/gilbarbara/logos/logos/twitter.svg" },
+                { name: "x", url: "https://logos-world.net/wp-content/uploads/2023/08/X-Logo.png" },
               ]}
 
               direction="left"
@@ -1250,7 +1254,7 @@ const Index = () => {
 
               <p className="text-lg text-muted-foreground leading-relaxed">
 
-                With over a decade of combined experience in digital marketing and automation, our team has helped 250+ businesses generate millions in revenue through strategic funnels and automated systems.
+                With about half a decade of combined experience in digital marketing and automation, I have  helped 20+ businesses increase revenue through strategic funnels and automated solutions.
 
               </p>
 
@@ -1258,7 +1262,7 @@ const Index = () => {
 
               <p className="text-lg text-muted-foreground leading-relaxed">
 
-                We don't just build pretty websites—we engineer systems that convert visitors into customers and customers into loyal advocates. Every strategy is backed by data, every implementation is tested, and every result is measurable.
+              I'm not the kind who chases fancy metrics. I value my work when it creates real, measurable impact, not just shallow numbers to clap for. Every project I take on gets my full energy and focus to deliver meaningful results.
 
               </p>
 
@@ -1292,10 +1296,9 @@ const Index = () => {
               </div>
 
 
-
               <Button size="lg" onClick={scrollToDiscovery} className="bg-gradient-to-r from-primary to-accent hover:shadow-lg transition-all">
 
-                Let's Work Together
+                 WORK WITH ME
 
               </Button>
 
@@ -1312,6 +1315,81 @@ const Index = () => {
       
 
 
+
+      {/* Footer - Let's Connect */}
+      <section className="py-24 lg:py-32 bg-gradient-to-br from-muted via-background to-muted relative overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/3 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="container mx-auto relative z-10">
+          <div className="text-center">
+            <h2 className="text-4xl lg:text-5xl font-black mb-8 leading-tight text-secondary">
+              Let's Connect
+            </h2>
+
+            <div className="flex items-center justify-center gap-4 flex-wrap">
+              <a
+                href="https://www.instagram.com/briankinavusha/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-14 h-14 bg-white rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 group/icon border border-secondary/10 animate-fade-in relative z-20 pointer-events-auto"
+                style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.08)', animationDelay: '200ms' }}
+              >
+                <svg className="w-7 h-7 text-[#E4405F] group-hover/icon:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+
+              <a
+                href="https://tiktok.com/@briankinavusha"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-14 h-14 bg-white rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 group/icon border border-secondary/10 animate-fade-in relative z-20 pointer-events-auto"
+                style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.08)', animationDelay: '300ms' }}
+              >
+                <svg className="w-7 h-7 text-[#000000] group-hover/icon:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                </svg>
+              </a>
+
+              <a
+                href="https://ke.linkedin.com/in/brian-kinavusha"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-14 h-14 bg-white rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 group/icon border border-secondary/10 animate-fade-in relative z-20 pointer-events-auto"
+                style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.08)', animationDelay: '400ms' }}
+              >
+                <svg className="w-7 h-7 text-[#0A66C2] group-hover/icon:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+              </a>
+
+              <a
+                href="https://github.com/kins2323"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-14 h-14 bg-white rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 group/icon border border-secondary/10 animate-fade-in relative z-20 pointer-events-auto"
+                style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.08)', animationDelay: '450ms' }}
+              >
+                <svg className="w-7 h-7 text-[#181717] group-hover/icon:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+              </a>
+
+              <a
+                href="mailto:brian@kinovadigitalmarketing.com"
+                className="w-14 h-14 bg-white rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 group/icon border border-secondary/10 animate-fade-in relative z-20 pointer-events-auto"
+                style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.08)', animationDelay: '500ms' }}
+              >
+                <svg className="w-7 h-7 text-primary group-hover/icon:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Modals */}
 

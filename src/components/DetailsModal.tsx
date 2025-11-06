@@ -26,7 +26,7 @@ export default function DetailsModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent 
-        className="max-w-5xl max-h-[90vh] overflow-y-auto p-8 sm:p-10"
+        className="max-w-[95vw] w-full max-h-[90vh] overflow-y-auto p-8 sm:p-10"
         onContextMenu={(e) => e.preventDefault()}
         style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
       >
@@ -39,7 +39,7 @@ export default function DetailsModal({
           <section className="w-full">
             <h2 className="text-2xl sm:text-3xl font-bold text-secondary mb-4 sm:mb-6">Visual Overview</h2>
             <div 
-              className="w-full h-72 sm:h-96 md:h-[500px] rounded-2xl overflow-hidden bg-gradient-to-br from-primary/10 to-accent/10 relative shadow-xl"
+              className="w-full rounded-2xl overflow-hidden bg-gradient-to-br from-primary/10 to-accent/10 relative shadow-xl"
               onContextMenu={(e) => e.preventDefault()}
               onDragStart={(e) => e.preventDefault()}
               style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
@@ -47,7 +47,7 @@ export default function DetailsModal({
               <img
                 src={image}
                 alt={title}
-                className="w-full h-full object-cover pointer-events-none select-none"
+                className="w-full h-auto object-contain pointer-events-none select-none"
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
                 onDragStart={(e) => e.preventDefault()}
@@ -133,7 +133,7 @@ export default function DetailsModal({
               }}
               className="w-full py-6 text-lg sm:text-xl font-semibold bg-gradient-to-r from-primary to-accent hover:shadow-xl transition-all"
             >
-              Book a Meeting
+              Want similar results?
             </Button>
           </section>
         </div>
