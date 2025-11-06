@@ -56,7 +56,7 @@ export default function DetailsModal({
               {/* B.K initials watermark */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none" style={{ userSelect: 'none', WebkitUserSelect: 'none', MozUserSelect: 'none', msUserSelect: 'none' }}>
                 <span 
-                  className="text-black text-xs sm:text-sm md:text-base font-black opacity-50 select-none"
+                  className="text-black text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black opacity-50 select-none"
                   style={{ 
                     userSelect: 'none', 
                     WebkitUserSelect: 'none', 

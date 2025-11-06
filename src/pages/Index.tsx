@@ -188,7 +188,7 @@ const Index = () => {
     const preventClicks = (e: MouseEvent) => {
       // Allow clicks on buttons and interactive elements
       const target = e.target as HTMLElement;
-      const isInteractive = target.closest('button, a, input, select, textarea, [role="button"], [role="link"], [onclick], [data-radix-dialog-trigger], [data-radix-dialog-close]');
+      const isInteractive = target.closest('button, a, input, select, textarea, [role="button"], [role="link"], [onclick], [data-radix-dialog-trigger], [data-radix-dialog-close], [data-slider-button]');
       
       // Only allow clicks INSIDE Cal.com iframe/content, not on container divs
       const isCalIframe = target.closest('#my-cal-inline-discovery iframe, #my-cal-inline-discovery [data-cal-namespace], [data-cal-namespace] iframe');
