@@ -22,12 +22,25 @@ export default function CardSlider({ cards, onCardClick, auto = true, speedPxPer
   const containerRef = useRef<HTMLDivElement | null>(null);
   const animationRef = useRef<number | null>(null);
   const lastTsRef = useRef<number | null>(null);
+  const pauseTimeoutRef = useRef<number | null>(null);
 
   const scrollByAmount = (direction: "next" | "prev") => {
     const container = containerRef.current;
     if (!container) return;
     const delta = container.clientWidth * 0.9 * (direction === "next" ? 1 : -1);
+
+    // Temporarily pause auto-ticker so manual scroll isn't immediately overridden
+    setIsPaused(true);
+    if (pauseTimeoutRef.current) {
+      window.clearTimeout(pauseTimeoutRef.current);
+      pauseTimeoutRef.current = null;
+    }
+
     container.scrollBy({ left: delta, behavior: "smooth" });
+
+    pauseTimeoutRef.current = window.setTimeout(() => {
+      setIsPaused(false);
+    }, 700);
   };
 
   // Auto-scroll ticker with seamless loop via duplicated content
@@ -58,6 +71,10 @@ export default function CardSlider({ cards, onCardClick, auto = true, speedPxPer
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
       animationRef.current = null;
       lastTsRef.current = null;
+      if (pauseTimeoutRef.current) {
+        window.clearTimeout(pauseTimeoutRef.current);
+        pauseTimeoutRef.current = null;
+      }
     };
   }, [auto, isPaused, speedPxPerSecond]);
 
@@ -84,13 +101,41 @@ export default function CardSlider({ cards, onCardClick, auto = true, speedPxPer
                 className="relative bg-white rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-2xl"
                 style={{ boxShadow: "0 20px 60px rgba(0,0,0,0.15)" }}
               >
-                <div className="w-full h-56 sm:h-60 md:h-64 bg-gradient-to-br from-primary/10 to-accent/10 overflow-hidden relative">
+                <div 
+                  className="w-full h-56 sm:h-60 md:h-64 bg-gradient-to-br from-primary/10 to-accent/10 overflow-hidden relative"
+                  onContextMenu={(e) => e.preventDefault()}
+                  onDragStart={(e) => e.preventDefault()}
+                  style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
+                >
                   <img
                     src={card.image}
                     alt={card.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 pointer-events-none select-none"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
+                    onDragStart={(e) => e.preventDefault()}
+                    style={{ userSelect: 'none', WebkitUserSelect: 'none', pointerEvents: 'none' }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                  {/* B.K initials watermark */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none" style={{ userSelect: 'none', WebkitUserSelect: 'none', MozUserSelect: 'none', msUserSelect: 'none' }}>
+                    <span 
+                      className="text-black text-xs sm:text-sm md:text-base font-black opacity-50 select-none"
+                      style={{ 
+                        userSelect: 'none', 
+                        WebkitUserSelect: 'none', 
+                        MozUserSelect: 'none', 
+                        msUserSelect: 'none',
+                        pointerEvents: 'none',
+                        textShadow: '0 0 0 rgba(0,0,0,0)',
+                        mixBlendMode: 'multiply'
+                      }}
+                      onContextMenu={(e) => e.preventDefault()}
+                      onDragStart={(e) => e.preventDefault()}
+                    >
+                      B.K
+                    </span>
+                  </div>
                 </div>
 
                 <div className="p-5 sm:p-6">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import CardSlider from "@/components/CardSlider";
 
@@ -22,10 +22,321 @@ import {
 
 } from "@/components/ui/dialog";
 
+// Declare Cal function type
+declare global {
+  interface Window {
+    Cal: any;
+  }
+}
 
+// Cal.com Inline Embed Component
+const CalInlineEmbed = () => {
+  const calRef = useRef<HTMLDivElement>(null);
+  const scriptLoaded = useRef(false);
 
+  useEffect(() => {
+    if (scriptLoaded.current || !calRef.current) return;
+
+    // Add CSS to hide Cal.com branding links and images
+    const style = document.createElement('style');
+    style.textContent = `
+      #my-cal-inline-discovery a[href*="cal.com"],
+      #my-cal-inline-discovery a[href*="Cal.com"],
+      #my-cal-inline-discovery a[href*="go.cal.com"],
+      #my-cal-inline-discovery a[href*="go.cal.com/booking"],
+      #my-cal-inline-discovery [data-powered-by],
+      #my-cal-inline-discovery .cal-branding,
+      #my-cal-inline-discovery [class*="branding"],
+      #my-cal-inline-discovery [class*="powered"],
+      #my-cal-inline-discovery img[src*="cal.com"],
+      #my-cal-inline-discovery img[src*="Cal.com"] {
+        display: none !important;
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Use MutationObserver to hide branding links and images that load dynamically
+    const observer = new MutationObserver(() => {
+      if (calRef.current) {
+        const brandingElements = calRef.current.querySelectorAll(
+          'a[href*="cal.com"], a[href*="Cal.com"], a[href*="go.cal.com"], a[href*="go.cal.com/booking"], ' +
+          '[data-powered-by], .cal-branding, [class*="branding"], [class*="powered"], ' +
+          'img[src*="cal.com"], img[src*="Cal.com"]'
+        );
+        brandingElements.forEach((element) => {
+          (element as HTMLElement).style.display = 'none';
+        });
+      }
+    });
+
+    if (calRef.current) {
+      observer.observe(calRef.current, {
+        childList: true,
+        subtree: true
+      });
+    }
+
+    // Store observer reference for cleanup
+    const observerRef = observer;
+
+    // Initialize Cal.com script loader
+    (function (C: Window, A: string, L: string) {
+      let p = function (a: any, ar: any) {
+        a.q.push(ar);
+      };
+      let d = C.document;
+      C.Cal = C.Cal || function () {
+        let cal = C.Cal;
+        let ar = arguments;
+        if (!cal.loaded) {
+          cal.ns = {};
+          cal.q = cal.q || [];
+          d.head.appendChild(d.createElement("script")).src = A;
+          cal.loaded = true;
+        }
+        if (ar[0] === L) {
+          const api = function () {
+            p(api, arguments);
+          };
+          const namespace = ar[1];
+          api.q = api.q || [];
+          if (typeof namespace === "string") {
+            cal.ns[namespace] = cal.ns[namespace] || api;
+            p(cal.ns[namespace], ar);
+            p(cal, ["initNamespace", namespace]);
+          } else {
+            p(cal, ar);
+          }
+          return;
+        }
+        p(cal, ar);
+      };
+    })(window, "https://app.cal.com/embed/embed.js", "init");
+
+    // Initialize Cal.com
+    window.Cal("init", "discovery", { origin: "https://app.cal.com" });
+
+    // Wait for Cal to be ready, then initialize inline embed
+    const initCal = () => {
+      if (window.Cal && window.Cal.ns && window.Cal.ns.discovery) {
+        window.Cal.ns.discovery("inline", {
+          elementOrSelector: "#my-cal-inline-discovery",
+          config: { layout: "month_view" },
+          calLink: "brian-kinavusha-dv24hg/discovery",
+        });
+
+        window.Cal.ns.discovery("ui", {
+          hideEventTypeDetails: false,
+          layout: "month_view"
+        });
+        scriptLoaded.current = true;
+      } else {
+        // Retry if Cal is not ready yet
+        setTimeout(initCal, 100);
+      }
+    };
+
+    // Small delay to ensure script is loaded
+    setTimeout(initCal, 500);
+
+    // Cleanup observer on unmount
+    return () => {
+      observerRef.disconnect();
+    };
+  }, []);
+
+  return (
+    <div 
+      id="my-cal-inline-discovery" 
+      ref={calRef}
+      style={{ 
+        width: '100%', 
+        height: '100%', 
+        overflow: 'scroll', 
+        minHeight: '600px',
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
+        pointerEvents: 'auto'
+      }}
+      onContextMenu={(e) => {
+        // Only allow if clicking directly on Cal.com iframe content
+        const target = e.target as HTMLElement;
+        const isCalIframe = target.closest('iframe, [data-cal-namespace]');
+        if (!isCalIframe) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }}
+      onClick={(e) => {
+        // Only allow clicks inside Cal.com iframe, not on container
+        const target = e.target as HTMLElement;
+        const isCalIframe = target.closest('iframe, [data-cal-namespace]');
+        const isCalInteractive = target.closest('button, a, input, select, [role="button"]');
+        
+        // Block clicks on container div itself
+        if (target.id === 'my-cal-inline-discovery' || (!isCalIframe && !isCalInteractive)) {
+          e.stopPropagation();
+        }
+      }}
+    />
+  );
+};
 
 const Index = () => {
+  // Global click protection - disable left and right clicks on non-interactive elements
+  useEffect(() => {
+    const preventClicks = (e: MouseEvent) => {
+      // Allow clicks on buttons and interactive elements
+      const target = e.target as HTMLElement;
+      const isInteractive = target.closest('button, a, input, select, textarea, [role="button"], [role="link"], [onclick], [data-radix-dialog-trigger], [data-radix-dialog-close]');
+      
+      // Only allow clicks INSIDE Cal.com iframe/content, not on container divs
+      const isCalIframe = target.closest('#my-cal-inline-discovery iframe, #my-cal-inline-discovery [data-cal-namespace], [data-cal-namespace] iframe');
+      const isCalInteractive = target.closest('#my-cal-inline-discovery button, #my-cal-inline-discovery a, #my-cal-inline-discovery input, #my-cal-inline-discovery select');
+      
+      // Block clicks on Cal.com container itself
+      const isCalContainer = target.id === 'my-cal-inline-discovery' || 
+                              target.closest('#my-cal-inline-discovery') === target.closest('#my-cal-inline-discovery')?.parentElement;
+      
+      // Allow clicks on card elements (for opening modals) and close buttons
+      const isCard = target.closest('[class*="card"], [class*="Card"], .cursor-pointer, [data-radix-dialog-close]');
+      
+      // Only allow clicks on buttons inside dialogs, not on dialog content
+      const isDialogButton = target.closest('[role="dialog"] button, [data-radix-dialog-content] button');
+      
+      // Block if clicking on Cal.com container, but allow iframe content
+      if (isCalContainer && !isCalIframe && !isCalInteractive) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+      
+      if (!isInteractive && !isCalIframe && !isCalInteractive && !isCard && !isDialogButton) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    };
+
+    const preventRightClick = (e: MouseEvent) => {
+      // Only allow right-click inside Cal.com iframe, not on container
+      const target = e.target as HTMLElement;
+      const isCalIframe = target.closest('#my-cal-inline-discovery iframe, #my-cal-inline-discovery [data-cal-namespace] iframe, [data-cal-namespace] iframe');
+      
+      // Block right-click on Cal.com container
+      const isCalContainer = target.id === 'my-cal-inline-discovery' || 
+                              (target.closest('#my-cal-inline-discovery') && !target.closest('#my-cal-inline-discovery iframe'));
+      
+      if (isCalContainer || !isCalIframe) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    };
+
+    // Disable context menu globally
+    const preventContextMenu = (e: Event) => {
+      // Only allow context menu inside Cal.com iframe, not on container
+      const target = e.target as HTMLElement;
+      const isCalIframe = target.closest('#my-cal-inline-discovery iframe, #my-cal-inline-discovery [data-cal-namespace] iframe, [data-cal-namespace] iframe');
+      
+      // Block context menu on Cal.com container
+      const isCalContainer = target.id === 'my-cal-inline-discovery' || 
+                              (target.closest('#my-cal-inline-discovery') && !target.closest('#my-cal-inline-discovery iframe'));
+      
+      if (isCalContainer || !isCalIframe) {
+        e.preventDefault();
+        return false;
+      }
+    };
+
+    // Disable text selection globally - including in modals
+    document.addEventListener('selectstart', (e) => {
+      const target = e.target as HTMLElement;
+      // Only allow selection inside Cal.com iframe, not on container
+      const isCalIframe = target.closest('#my-cal-inline-discovery iframe, #my-cal-inline-discovery [data-cal-namespace] iframe, [data-cal-namespace] iframe');
+      const isInput = target.closest('input, textarea, [contenteditable]');
+      
+      // Block selection on Cal.com container
+      const isCalContainer = target.id === 'my-cal-inline-discovery' || 
+                              (target.closest('#my-cal-inline-discovery') && !target.closest('#my-cal-inline-discovery iframe'));
+      
+      if ((isCalContainer || !isCalIframe) && !isInput) {
+        e.preventDefault();
+        return false;
+      }
+    }, false);
+
+    // Disable DevTools keyboard shortcuts
+    const preventDevTools = (e: KeyboardEvent) => {
+      // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S
+      if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+        (e.ctrlKey && e.key === 'U') ||
+        (e.ctrlKey && e.key === 'S') ||
+        (e.ctrlKey && e.key === 'P')
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    };
+
+    // Disable common DevTools shortcuts
+    document.addEventListener('keydown', preventDevTools, true);
+
+    // Add event listeners
+    document.addEventListener('click', preventClicks, true);
+    document.addEventListener('contextmenu', preventRightClick, true);
+    document.addEventListener('contextmenu', preventContextMenu, true);
+    document.addEventListener('mousedown', preventClicks, true);
+
+    // CSS to prevent selection globally - including in modals
+    const style = document.createElement('style');
+    style.textContent = `
+      * {
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+      }
+      input, textarea, [contenteditable], #my-cal-inline-discovery *,
+      [data-cal-namespace] *, .cal-com * {
+        -webkit-user-select: text !important;
+        -moz-user-select: text !important;
+        -ms-user-select: text !important;
+        user-select: text !important;
+      }
+      button, a, [role="button"], [role="link"], [data-radix-dialog-close], [data-radix-dialog-trigger] {
+        pointer-events: auto !important;
+      }
+      [role="dialog"], [data-radix-dialog-content] {
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+      }
+      [role="dialog"] img, [data-radix-dialog-content] img {
+        pointer-events: none !important;
+        -webkit-user-drag: none !important;
+        -khtml-user-drag: none !important;
+        -moz-user-drag: none !important;
+        -o-user-drag: none !important;
+        user-drag: none !important;
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.removeEventListener('keydown', preventDevTools, true);
+      document.removeEventListener('click', preventClicks, true);
+      document.removeEventListener('contextmenu', preventRightClick, true);
+      document.removeEventListener('contextmenu', preventContextMenu, true);
+      document.removeEventListener('mousedown', preventClicks, true);
+      document.head.removeChild(style);
+    };
+  }, []);
 
   const [showFreelancerModal, setShowFreelancerModal] = useState(false);
 
@@ -59,13 +370,27 @@ const Index = () => {
 
     {
 
+      id: "content",
+
+      title: "web development",
+
+      description: "I design websites with a focus on user experience and conversion rate optimization",
+
+      image: "https://kinovadigitalmarketing.com/hubfs/portifolio/brian%20kinavusha%20web%20dev.png",
+
+      details: "Content is king, and we're master storytellers. We develop comprehensive content strategies including blog posts, videos, whitepapers, and case studies. Each piece is designed to educate your audience and position you as an industry authority.",
+
+    },
+
+    {
+
       id: "seo",
 
       title: "SEO & Keywords",
 
       description: "Rank higher on Google with data-driven keyword strategies",
 
-      image: "https://images.pexels.com/photos/3848606/pexels-photo-3848606.jpeg?auto=compress&cs=tinysrgb&w=600",
+      image: "https://kinovadigitalmarketing.com/hubfs/portifolio/brian%20kinavusha%20seo&keywords.png",
 
       details: "Our SEO expertise helps you dominate search results. We conduct comprehensive keyword research, optimize on-page elements, build high-quality backlinks, and create content strategies that rank. With our proven methodology, we've helped businesses increase organic traffic by 300%+ within 6 months.",
 
@@ -79,37 +404,9 @@ const Index = () => {
 
       description: "Build engaged communities across all major platforms",
 
-      image: "https://images.pexels.com/photos/3862630/pexels-photo-3862630.jpeg?auto=compress&cs=tinysrgb&w=600",
+      image: "https://kinovadigitalmarketing.com/hubfs/portifolio/brian%20kinavusha%20social%20media.jpg",
 
       details: "We craft social media strategies that convert followers into customers. From content calendars to community management, we handle everything. Our approach focuses on engagement-first content that builds trust and loyalty with your audience.",
-
-    },
-
-    {
-
-      id: "content",
-
-      title: "Content Marketing",
-
-      description: "Create valuable content that attracts your ideal clients",
-
-      image: "https://images.pexels.com/photos/3568519/pexels-photo-3568519.jpeg?auto=compress&cs=tinysrgb&w=600",
-
-      details: "Content is king, and we're master storytellers. We develop comprehensive content strategies including blog posts, videos, whitepapers, and case studies. Each piece is designed to educate your audience and position you as an industry authority.",
-
-    },
-
-    {
-
-      id: "leads",
-
-      title: "Lead Generation",
-
-      description: "Build a pipeline of qualified leads ready to buy",
-
-      image: "https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=600",
-
-      details: "Generate high-quality leads consistently with our proven lead generation funnels. We use targeted ads, landing pages, and nurture sequences to attract and convert your ideal customers. Our systems produce 10+ qualified leads weekly for our clients.",
 
     },
 
@@ -121,9 +418,23 @@ const Index = () => {
 
       description: "Profitable ads that generate immediate revenue",
 
-      image: "https://images.pexels.com/photos/3714897/pexels-photo-3714897.jpeg?auto=compress&cs=tinysrgb&w=600",
+      image: "https://kinovadigitalmarketing.com/hubfs/portifolio/goole%20ads.png",
 
       details: "Master Google, Meta, and LinkedIn ads with our expert team. We create high-converting ad campaigns with optimal ROAS. Every dollar spent is tracked and optimized for maximum return. Typical clients see 5:1 to 10:1 return on ad spend.",
+
+    },
+
+    {
+
+      id: "leads",
+
+      title: "Lead Generation",
+
+      description: "Build a pipeline of qualified leads ready to buy",
+
+      image: "https://kinovadigitalmarketing.com/hubfs/portifolio/brian%20kinavusha%20lead%20gen.png",
+
+      details: "Generate high-quality leads consistently with our proven lead generation funnels. We use targeted ads, landing pages, and nurture sequences to attract and convert your ideal customers. Our systems produce 10+ qualified leads weekly for our clients.",
 
     },
 
@@ -135,7 +446,7 @@ const Index = () => {
 
       description: "Convert subscribers into loyal, repeat customers",
 
-      image: "https://images.pexels.com/photos/3755440/pexels-photo-3755440.jpeg?auto=compress&cs=tinysrgb&w=600",
+      image: "https://kinovadigitalmarketing.com/hubfs/portifolio/email%20marketing.png",
 
       details: "Email remains one of the highest ROI marketing channels. We build segmented lists, create compelling sequences, and automate campaigns. Our email funnels generate consistent revenue with 30-50% open rates and 5-10% conversion rates.",
 
@@ -155,7 +466,7 @@ const Index = () => {
 
       description: "Capture and qualify leads 24/7 without manual work",
 
-      image: "https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=600",
+      image: "https://kinovadigitalmarketing.com/hubfs/portifolio/google%20leaed%20gen.png",
 
       details: "Set it and forget it. Our lead capture systems work around the clock to bring in qualified prospects. From form submissions to automated follow-ups, we handle everything. Your sales team gets pre-qualified leads ready to close.",
 
@@ -169,7 +480,7 @@ const Index = () => {
 
       description: "Keep your CRM updated automatically from multiple sources",
 
-      image: "https://images.pexels.com/photos/3862606/pexels-photo-3862606.jpeg?auto=compress&cs=tinysrgb&w=600",
+      image: "https://kinovadigitalmarketing.com/hubfs/portifolio/t2.png",
 
       details: "Eliminate manual data entry. We connect your CRM with all your tools so data flows automatically. Customer interactions, deals, follow-ups—everything syncs in real-time. This saves your team 5+ hours per week while improving accuracy.",
 
@@ -183,7 +494,7 @@ const Index = () => {
 
       description: "Generate consistent content without hiring writers",
 
-      image: "https://images.pexels.com/photos/3568519/pexels-photo-3568519.jpeg?auto=compress&cs=tinysrgb&w=600",
+      image: "https://kinovadigitalmarketing.com/hubfs/portifolio/writing%20agents.png",
 
       details: "AI-powered content generation combined with human touch. We set up systems that produce blog posts, social media content, and email copy. Your content calendar runs on autopilot while maintaining your brand voice.",
 
@@ -197,7 +508,7 @@ const Index = () => {
 
       description: "Instant customer support and lead qualification 24/7",
 
-      image: "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=600",
+      image: "https://kinovadigitalmarketing.com/hubfs/portifolio/chatbots.png",
 
       details: "Deploy intelligent chatbots that qualify leads and answer FAQs instantly. Our bots learn from conversations and improve over time. They handle 80% of common inquiries, freeing your team for high-value work.",
 
@@ -211,7 +522,7 @@ const Index = () => {
 
       description: "Move leads through your sales process automatically",
 
-      image: "https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=600",
+      image: "https://kinovadigitalmarketing.com/hubfs/portifolio/lead%20magnet%20capture.png",
 
       details: "Automate your entire sales process from lead capture to close. Multi-stage workflows handle follow-ups, objection responses, and deal progression. Your sales team focuses on closing while automation handles everything else.",
 
@@ -225,7 +536,7 @@ const Index = () => {
 
       description: "Trigger actions based on email interactions automatically",
 
-      image: "https://images.pexels.com/photos/3755440/pexels-photo-3755440.jpeg?auto=compress&cs=tinysrgb&w=600",
+      image: "https://kinovadigitalmarketing.com/hubfs/portifolio/t1.png",
 
       details: "Create powerful workflows triggered by email opens, clicks, and replies. Send SMS alerts when important emails arrive. Tag contacts automatically based on behavior. Personalize experiences at scale.",
 
@@ -247,9 +558,9 @@ const Index = () => {
 
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
 
-          <div className="absolute top-1/4 -left-48 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/4 -left-48 w-96 h-96 bg-primary/3 rounded-full blur-3xl"></div>
 
-          <div className="absolute bottom-1/4 -right-48 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-1/4 -right-48 w-96 h-96 bg-accent/3 rounded-full blur-3xl"></div>
 
         </div>
 
@@ -261,7 +572,7 @@ const Index = () => {
 
             {/* Left Column - Text */}
 
-            <div className="flex-1 max-w-2xl space-y-10 animate-fade-in">
+            <div className="flex-1 max-w-2xl space-y-8 lg:space-y-10 animate-fade-in">
 
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20">
 
@@ -273,19 +584,19 @@ const Index = () => {
 
 
 
-              <h1 className="text-6xl lg:text-8xl font-black leading-[0.95] tracking-tight text-secondary" style={{ textShadow: '0 2px 4px rgba(255,255,255,0.1)' }}>
+              <h1 className="text-6xl lg:text-8xl font-black leading-[1.05] lg:leading-[0.95] tracking-tight text-secondary" style={{ textShadow: '0 2px 4px rgba(255,255,255,0.1)' }}>
 
-                I Strategize, Market, and Automate Bussiness.
+                I Strategize, Market, and Automate Business.
 
               </h1>
 
 
+              <p className="text-xl lg:text-2xl text-muted-foreground font-medium max-w-xl leading-[1.7] lg:leading-relaxed space-y-3">
+  <strong>Hi, I'm Brian Kinavusha.</strong><br />
+  <span className="block mt-2">I've got this obsession with turning messy marketing problems into clean, well-articulated, sales-driven messages with a touch of analytics.</span><br />
+  <span className="block mt-2">I'd love to be part of your next project. Take a look at some of my recent work below.</span>
+</p>
 
-              <p className="text-xl lg:text-2xl text-muted-foreground font-medium max-w-xl leading-relaxed">
-
-                Automated marketing systems that attract clients and scale revenue — without the guesswork.
-
-              </p>
 
 
 
@@ -301,11 +612,12 @@ const Index = () => {
 
                 >
 
-                  <span>For Job Offers & Gigs</span>
+                  <span>Have a Job Offer for me?</span>
 
                   <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+
 
                   </svg>
 
@@ -322,7 +634,7 @@ const Index = () => {
                   className="text-base sm:text-lg px-8 py-6 h-auto rounded-lg font-semibold border-2 border-secondary/20 hover:border-secondary hover:bg-secondary/5 flex items-center gap-3 group bg-white transition-all shadow-md hover:shadow-lg"
                 >
 
-                  <span>Pick My Brain</span>
+                  <span>Pick My Brains</span>
 
                   <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 
@@ -365,16 +677,16 @@ const Index = () => {
 
             {/* Right Column - Vertical Video Card (9:16 for Shorts) */}
 
-            <div className="flex-shrink-0 animate-fade-in">
+            <div className="flex-shrink-0 w-full sm:w-auto animate-fade-in">
 
-              <div className="relative flex flex-col items-center gap-6">
+              <div className="relative flex flex-col items-center gap-6 w-full sm:w-auto">
 
                 <div className="absolute -inset-4 bg-gradient-to-br from-primary/20 to-accent/20 rounded-[3rem] blur-2xl"></div>
 
                 <img
                   src="https://theclosecode.co.ke/wp-content/uploads/2025/09/hero-image-.webp"
-                  alt="Professional marketing and automation services"
-                  className="relative w-[300px] sm:w-[340px] lg:w-[400px] aspect-[9/16] object-cover rounded-[2.5rem] border border-secondary/10 hover:scale-[1.02] transition-all duration-500"
+                  alt="brian kinavusha Professional marketing and automation services"
+                  className="relative w-full max-w-[300px] sm:max-w-[340px] lg:max-w-[420px] aspect-[9/16] object-cover rounded-[2.5rem] border border-secondary/10 hover:scale-[1.02] transition-all duration-500"
                   style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}
                   loading="eager"
                 />
@@ -383,7 +695,7 @@ const Index = () => {
 
                 {/* Social Icons Below Video */}
 
-                <div className="flex items-center justify-center gap-4">
+                <div className="flex items-center justify-center gap-4 relative z-20">
 
                   <a
 
@@ -393,7 +705,7 @@ const Index = () => {
 
                     rel="noopener noreferrer"
 
-                    className="w-14 h-14 bg-white rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 group/icon border border-secondary/10 animate-fade-in"
+                    className="w-14 h-14 bg-white rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 group/icon border border-secondary/10 animate-fade-in relative z-20 pointer-events-auto"
 
                     style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.08)', animationDelay: '200ms' }}
 
@@ -415,7 +727,7 @@ const Index = () => {
 
                     rel="noopener noreferrer"
 
-                    className="w-14 h-14 bg-white rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 group/icon border border-secondary/10 animate-fade-in"
+                    className="w-14 h-14 bg-white rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 group/icon border border-secondary/10 animate-fade-in relative z-20 pointer-events-auto"
 
                     style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.08)', animationDelay: '300ms' }}
 
@@ -437,7 +749,7 @@ const Index = () => {
 
                     rel="noopener noreferrer"
 
-                    className="w-14 h-14 bg-white rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 group/icon border border-secondary/10 animate-fade-in"
+                    className="w-14 h-14 bg-white rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 group/icon border border-secondary/10 animate-fade-in relative z-20 pointer-events-auto"
 
                     style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.08)', animationDelay: '400ms' }}
 
@@ -453,9 +765,31 @@ const Index = () => {
 
                   <a
 
+                    href="https://github.com/kins2323"
+
+                    target="_blank"
+
+                    rel="noopener noreferrer"
+
+                    className="w-14 h-14 bg-white rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 group/icon border border-secondary/10 animate-fade-in relative z-20 pointer-events-auto"
+
+                    style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.08)', animationDelay: '450ms' }}
+
+                  >
+
+                    <svg className="w-7 h-7 text-[#181717] group-hover/icon:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+
+                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+
+                    </svg>
+
+                  </a>
+
+                  <a
+
                     href="mailto:brian@kinovadigitalmarketing.com"
 
-                    className="w-14 h-14 bg-white rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 group/icon border border-secondary/10 animate-fade-in"
+                    className="w-14 h-14 bg-white rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 group/icon border border-secondary/10 animate-fade-in relative z-20 pointer-events-auto"
 
                     style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.08)', animationDelay: '500ms' }}
 
@@ -479,22 +813,6 @@ const Index = () => {
 
         </div>
 
-
-
-        {/* Scroll Indicator */}
-
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
-
-          <span className="text-xs font-medium text-muted-foreground uppercase tracking-widest">Scroll</span>
-
-          <svg className="w-6 h-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-
-          </svg>
-
-        </div>
-
       </section>
 
 
@@ -515,175 +833,89 @@ const Index = () => {
 
         <div className="container mx-auto relative z-10">
 
-          <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-16">
+          <div className="text-center mb-12">
 
-            {/* Left Column - Text */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 rounded-full border border-accent/20 mb-4">
 
-            <div className="flex-1 space-y-8 lg:sticky lg:top-24">
+              <span className="w-2 h-2 bg-accent rounded-full"></span>
 
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 rounded-full border border-accent/20">
-
-                <span className="w-2 h-2 bg-accent rounded-full"></span>
-
-                <span className="text-sm font-semibold text-accent">Free Consultation</span>
-
-              </div>
-
-
-
-              <h2 className="text-5xl lg:text-6xl font-black leading-tight text-secondary">
-
-                Let's Build Systems That Sell For You
-
-              </h2>
-
-
-
-              <p className="text-xl text-muted-foreground leading-relaxed max-w-xl">
-
-                We create automated systems that attract ideal clients and loop loyal customers, freeing up hours to focus on growth.
-
-              </p>
-
-
-
-              <div className="space-y-4 pt-4">
-
-                <div className="flex items-center gap-3">
-
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-
-                    <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-
-                    </svg>
-
-                  </div>
-
-                  <div>
-
-                    <h3 className="font-bold text-secondary">30-Minute Strategy Call</h3>
-
-                    <p className="text-sm text-muted-foreground">Discover opportunities in your business</p>
-
-                  </div>
-
-                </div>
-
-
-
-                <div className="flex items-center gap-3">
-
-                  <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
-
-                    <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-
-                    </svg>
-
-                  </div>
-
-                  <div>
-
-                    <h3 className="font-bold text-secondary">Custom Action Plan</h3>
-
-                    <p className="text-sm text-muted-foreground">Tailored strategy for your goals</p>
-
-                  </div>
-
-                </div>
-
-
-
-                <div className="flex items-center gap-3">
-
-                  <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center flex-shrink-0">
-
-                    <svg className="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-
-                    </svg>
-
-                  </div>
-
-                  <div>
-
-                    <h3 className="font-bold text-secondary">Zero Obligation</h3>
-
-                    <p className="text-sm text-muted-foreground">Just value and insights</p>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-
-
-              <div className="flex items-center gap-6 pt-6 border-t border-secondary/10">
-
-                <div className="flex -space-x-3">
-
-                  <div className="w-12 h-12 rounded-full bg-primary border-2 border-white flex items-center justify-center text-white font-bold">JM</div>
-
-                  <div className="w-12 h-12 rounded-full bg-accent border-2 border-white flex items-center justify-center text-white font-bold">SK</div>
-
-                  <div className="w-12 h-12 rounded-full bg-secondary border-2 border-white flex items-center justify-center text-white font-bold">AL</div>
-
-                </div>
-
-                <div>
-
-                  <div className="font-bold text-secondary">Join 250+ Business Owners</div>
-
-                  <div className="text-sm text-muted-foreground">Who scaled with our systems</div>
-
-                </div>
-
-              </div>
+              <span className="text-sm font-semibold text-accent">Consultation</span>
 
             </div>
 
 
 
-            {/* Right Column - Meeting Card */}
+            <h2 className="text-5xl lg:text-6xl font-black leading-tight text-secondary mb-4">
 
-            <div className="flex-1 w-full lg:w-auto">
+              What loophole should I fix? Let's talk.
 
-              <div className="relative group">
+            </h2>
 
-                <div className="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-primary rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
 
-                <div className="relative bg-white rounded-2xl overflow-hidden" style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}>
 
-                  <div className="bg-gradient-to-r from-primary to-accent p-6">
+            <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
 
-                    <h3 className="text-2xl font-black text-white">Schedule Your Free Strategy Call</h3>
+              I can be an expert only if I know what your business really needs. Fill me in.
 
-                    <p className="text-white/90 mt-2">Pick a time that works for you</p>
+            </p>
 
-                  </div>
+          </div>
 
-                  <div className="h-[900px] lg:h-[1000px] bg-muted/30 overflow-hidden overflow-x-hidden">
 
-                    <iframe
 
-                      src="https://kinovadigitalmarketing.com/meetings/bkinavusha"
+          {/* Booking Component */}
 
-                      className="w-full h-full border-0"
+          <div 
+            className="max-w-4xl mx-auto mt-12"
+            onContextMenu={(e) => {
+              const target = e.target as HTMLElement;
+              const isCalContent = target.closest('#my-cal-inline-discovery iframe, #my-cal-inline-discovery [data-cal-namespace]');
+              if (!isCalContent) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+            }}
+            onClick={(e) => {
+              const target = e.target as HTMLElement;
+              const isCalContent = target.closest('#my-cal-inline-discovery iframe, #my-cal-inline-discovery [data-cal-namespace]');
+              const isCalInteractive = target.closest('#my-cal-inline-discovery button, #my-cal-inline-discovery a, #my-cal-inline-discovery input');
+              
+              // Block clicks on container, only allow Cal.com iframe content
+              if (!isCalContent && !isCalInteractive) {
+                e.stopPropagation();
+              }
+            }}
+            style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
+          >
 
-                      title="Schedule a Meeting"
+            <div 
+              className="relative group"
+              onContextMenu={(e) => {
+                const target = e.target as HTMLElement;
+                const isCalContent = target.closest('#my-cal-inline-discovery iframe, #my-cal-inline-discovery [data-cal-namespace]');
+                if (!isCalContent) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
+              }}
+            >
 
-                      loading="lazy"
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-primary rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
 
-                    />
+              <div 
+                className="relative bg-white rounded-2xl overflow-hidden" 
+                style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}
+                onContextMenu={(e) => {
+                  const target = e.target as HTMLElement;
+                  const isCalContent = target.closest('#my-cal-inline-discovery iframe, #my-cal-inline-discovery [data-cal-namespace]');
+                  if (!isCalContent) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
+                }}
+              >
 
-                  </div>
-
-                </div>
+                <CalInlineEmbed />
 
               </div>
 
@@ -723,15 +955,14 @@ const Index = () => {
 
             <h2 className="text-5xl lg:text-6xl font-black mb-4 leading-tight text-secondary">
 
-              I Marketing
+              In Marketing
 
             </h2>
 
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
 
-              From strategy to execution, we provide comprehensive marketing services to attract and convert your ideal clients.
-
-            </p>
+              Over the 4 years of being in business, I have developed strategies and skills that have driven impact for over 20+ businesses. Here are some screenshots.
+              </p>
 
           </div>
 
@@ -789,7 +1020,8 @@ const Index = () => {
 
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
 
-              Sophisticated automations that handle repetitive tasks, qualify leads, and nurture customers 24/7.
+              I'm not into fancy stuff. I value ROI for automations. Here are some.
+              
 
             </p>
 
@@ -837,7 +1069,7 @@ const Index = () => {
 
               <span className="w-2 h-2 bg-secondary rounded-full"></span>
 
-              <span className="text-sm font-semibold text-secondary">Tools at My Fingertips</span>
+              <span className="text-sm font-semibold text-secondary">Tech & Tools</span>
 
             </div>
 
@@ -845,7 +1077,7 @@ const Index = () => {
 
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
 
-              We work with industry-leading platforms to deliver powerful, scalable solutions.
+              I interact with these tools mostly daily, but no week has passed without opening one or two. This helps me keep up with tools most teams use.
 
             </p>
 
@@ -864,7 +1096,6 @@ const Index = () => {
                 { name: "n8n", url: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/N8n-logo-new.svg/1280px-N8n-logo-new.svg.png" },
                 { name: "Make", url: "https://www.freelogovectors.net/wp-content/uploads/2023/11/make-logo-freelogovectors.net_.png" },
                 { name: "Zapier", url: "https://cdn.jsdelivr.net/gh/gilbarbara/logos/logos/zapier.svg" },
-
                 { name: "GoHighLevel", url: "https://ghlbuilds.com/wp-content/uploads/2025/09/highlevel-logo.png" },
                 { name: "IFTTT", url: "https://cdn.jsdelivr.net/gh/gilbarbara/logos/logos/ifttt.svg" },
                 { name: "Airtable", url: "https://cdn.jsdelivr.net/gh/gilbarbara/logos/logos/airtable.svg" },
@@ -1011,7 +1242,7 @@ const Index = () => {
 
               <h2 className="text-5xl lg:text-6xl font-black leading-tight">
 
-                We Build Systems, Not Just Websites
+              One Face. Team-Level Results.
 
               </h2>
 
