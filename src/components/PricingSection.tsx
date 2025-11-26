@@ -1,4 +1,4 @@
-import { Check, Sparkles, Clock, AlertTriangle } from 'lucide-react';
+import { Check, Sparkles, Clock, AlertTriangle, X } from 'lucide-react';
 import CountdownTimer from './CountdownTimer';
 import { use6HourLoopCountdown, useCountdown } from '../hooks/useCountdown';
 
@@ -7,63 +7,67 @@ const pricingPlans = [
     name: 'Elite Coaching',
     originalPrice: '18,000',
     price: '12,999',
-    description: '10 in 1 coaching, week is 2 week coaching',
+    description: '3x Weekly Coaching • 2 Weeks Intensive • Complete Access',
     features: [
       'Everything in Produle',
-      '10 in 1 coaching package',
-      '2 weeks of intensive coaching',
+      '3 Live Coaching Calls per week',
+      '2 Weeks of intensive coaching',
       'Personalized success strategy',
       'Direct mentor access',
       'Complete portfolio review',
       'Pitch practice sessions',
+      'Full community access',
+      'All templates and materials included',
     ],
     cta: 'Apply for Coaching',
-    popular: false,
+    popular: true,
   },
   {
     name: 'Produle',
     originalPrice: '3,500',
     price: '2,499',
-    description: 'Access to community, templates are given and support is once a week on random days',
+    description: 'Full Program Access + Weekly Support',
     features: [
-      'All core courses included',
-      'Lifetime unlimited access',
-      'Community access',
-      'Templates included',
-      'Support once a week (random days)',
-      'Premium resources library',
+      '3 Core Modules (Lead Generation, Email Marketing AI, Automations)',
+      'Lifetime access to all videos',
+      'Weekly support call + WhatsApp Q&A',
+      'Community access after module completion',
+      'Templates included (Google Drive link)',
+      'Accountability community for graduates',
     ],
     cta: 'Get Produle',
-    popular: true,
+    popular: false,
   },
   {
     name: 'Skill Builder',
     originalPrice: '2,500',
     price: '999',
-    description: 'Has the singular modules, no community support, paid templates are individually bought',
+    description: 'Focused Module Learning',
     features: [
       'Choose 1 premium course module',
-      'Lifetime access to content',
-      'Course materials & worksheets',
-      'Paid templates bought individually',
-      'Email support',
-      'No community access',
+      'Lifetime access to that module',
+      '❌ Community access sold separately',
+      '❌ Support sessions paid separately',
+      '❌ Templates bought separately',
+      'Course materials & worksheets included',
     ],
     cta: 'Start Learning',
     popular: false,
+    isFree: true,
   },
   {
     name: 'Starter Pack',
     originalPrice: '2,000',
     price: '100',
-    description: 'This pack has a temporary KSH 100 since some people are reselling it we have added it to escape it but it will be scrapped by 8th November',
+    description: 'Intro Offer — Ends Nov 8, 2025',
     features: [
-      'Access to community',
-      'Weekly newsletters',
-      'Free resources library',
-      'Basic email support',
+      'Lead Generation 1.0 only',
+      '❌ No community access (even if paid separately)',
+      '❌ No templates included',
+      '❌ Newsletter support sold separately',
+      'Free resources library included',
     ],
-    cta: 'Get Started',
+    cta: 'Get Starter Pack',
     popular: false,
     isFree: true,
   },
@@ -116,14 +120,14 @@ export default function PricingSection() {
                 </div>
               )}
 
-              {plan.isFree && !freeOfferCountdown.isExpired && (
+              {plan.isFree && !freeOfferCountdown.isExpired && (plan.name === 'Skill Builder' || plan.name === 'Starter Pack') && (
                 <div className="mb-4 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-400 rounded-lg p-2">
                   <div className="flex items-center gap-2 mb-1">
                     <AlertTriangle className="w-3 h-3 text-amber-600" />
-                    <span className="text-xs font-bold text-amber-900 uppercase">Limited Time</span>
+                    <span className="text-xs font-bold text-amber-900 uppercase">Limited Time{plan.name === 'Starter Pack' ? ' Offer' : ''}</span>
                   </div>
                   <div className="text-xs text-amber-800 font-semibold mb-1">
-                    Scrapped by Nov 8, 2025
+                    {plan.name === 'Starter Pack' ? 'Ends Nov 8, 2025' : 'Expires Nov 8, 2025'}
                   </div>
                   <div className="flex items-center gap-1 text-xs">
                     <Clock className="w-3 h-3 text-amber-700" />
@@ -162,12 +166,20 @@ export default function PricingSection() {
               </div>
 
               <ul className="space-y-2 mb-6">
-                {plan.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="flex items-start gap-2">
-                    <Check className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#ff5c35' }} />
-                    <span className="text-gray-700 text-xs">{feature}</span>
-                  </li>
-                ))}
+                {plan.features.map((feature, featureIndex) => {
+                  const isNegative = feature.startsWith('❌');
+                  const featureText = isNegative ? feature.replace('❌', '').trim() : feature;
+                  return (
+                    <li key={featureIndex} className="flex items-start gap-2">
+                      {isNegative ? (
+                        <X className="w-4 h-4 flex-shrink-0 mt-0.5 text-gray-400" />
+                      ) : (
+                        <Check className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#ff5c35' }} />
+                      )}
+                      <span className={`text-xs ${isNegative ? 'text-gray-500' : 'text-gray-700'}`}>{featureText}</span>
+                    </li>
+                  );
+                })}
               </ul>
 
               <a
@@ -195,12 +207,11 @@ export default function PricingSection() {
           {pricingPlans.slice(3).map((plan, index) => (
             <div
               key={index}
-              className={`relative bg-white rounded-2xl p-5 border-2 transition-all duration-300 hover:scale-105 hover:shadow-2xl flex items-center gap-6 ${
+              className={`relative bg-white rounded-2xl p-4 md:p-5 border-2 transition-all duration-300 hover:scale-105 hover:shadow-2xl flex flex-col md:flex-row md:items-center gap-4 md:gap-6 ${
                 plan.popular
                   ? 'border-[#ff5c35] shadow-xl shadow-[#ff5c35]/20 ring-2 ring-[#ff5c35]/20'
                   : 'border-gray-200 hover:border-[#215c9a]'
               }`}
-              style={{ minHeight: '200px' }}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
@@ -212,14 +223,14 @@ export default function PricingSection() {
               )}
 
               {/* Left Section - Timer Alert */}
-              {plan.isFree && !freeOfferCountdown.isExpired && (
-                <div className="flex-shrink-0 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-400 rounded-lg p-3">
+              {plan.isFree && !freeOfferCountdown.isExpired && (plan.name === 'Skill Builder' || plan.name === 'Starter Pack') && (
+                <div className="flex-shrink-0 w-full md:w-auto bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-400 rounded-lg p-3">
                   <div className="flex items-center gap-2 mb-1">
                     <AlertTriangle className="w-3 h-3 text-amber-600" />
-                    <span className="text-xs font-bold text-amber-900 uppercase">Limited Time</span>
+                    <span className="text-xs font-bold text-amber-900 uppercase">Limited Time{plan.name === 'Starter Pack' ? ' Offer' : ''}</span>
                   </div>
                   <div className="text-xs text-amber-800 font-semibold mb-1">
-                    Scrapped by Nov 8, 2025
+                    {plan.name === 'Starter Pack' ? 'Ends Nov 8, 2025' : 'Expires Nov 8, 2025'}
                   </div>
                   <div className="flex items-center gap-1 text-xs">
                     <Clock className="w-3 h-3 text-amber-700" />
@@ -231,47 +242,55 @@ export default function PricingSection() {
               )}
 
               {/* Middle Section - Content */}
-              <div className="flex-grow">
+              <div className="flex-grow w-full md:w-auto">
                 <div className="mb-3">
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">{plan.name}</h3>
+                  <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-2">{plan.name}</h3>
                   <p className="text-gray-600 text-xs leading-relaxed">{plan.description}</p>
                 </div>
 
                 <div className="mb-2">
                   {plan.originalPrice !== plan.price ? (
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span className="text-xs text-gray-500">Was</span>
-                      <span className="text-sm text-gray-400 line-through">KSH {plan.originalPrice}</span>
+                      <span className="text-xs md:text-sm text-gray-400 line-through">KSH {plan.originalPrice}</span>
                       <span className="text-xs text-gray-500">→</span>
                       <span className="text-xs font-semibold text-green-600">Now</span>
                     </div>
                   ) : null}
                 </div>
 
-                <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-3xl font-bold text-slate-900">
+                <div className="flex flex-wrap items-baseline gap-2 mb-4">
+                  <span className="text-2xl md:text-3xl font-bold text-slate-900">
                     {plan.price === '0' ? 'FREE' : `KSH ${plan.price}`}
                   </span>
                   {plan.originalPrice !== plan.price && plan.price !== '0' && (
-                    <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                    <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full whitespace-nowrap">
                       Save KSH {(parseInt(plan.originalPrice.replace(',', '')) - parseInt(plan.price.replace(',', ''))).toLocaleString()}
                     </span>
                   )}
                 </div>
 
-                {/* Features in grid */}
-                <ul className="grid grid-cols-2 gap-x-4 gap-y-1">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-start gap-2">
-                      <Check className="w-3 h-3 flex-shrink-0 mt-0.5" style={{ color: '#ff5c35' }} />
-                      <span className="text-gray-700 text-xs">{feature}</span>
-                    </li>
-                  ))}
+                {/* Features in grid - responsive */}
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 md:gap-y-1">
+                  {plan.features.map((feature, featureIndex) => {
+                    const isNegative = feature.startsWith('❌');
+                    const featureText = isNegative ? feature.replace('❌', '').trim() : feature;
+                    return (
+                      <li key={featureIndex} className="flex items-start gap-2">
+                        {isNegative ? (
+                          <X className="w-3 h-3 flex-shrink-0 mt-0.5 text-gray-400" />
+                        ) : (
+                          <Check className="w-3 h-3 flex-shrink-0 mt-0.5" style={{ color: '#ff5c35' }} />
+                        )}
+                        <span className={`text-xs ${isNegative ? 'text-gray-500' : 'text-gray-700'}`}>{featureText}</span>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
 
               {/* Right Section - Button */}
-              <div className="flex-shrink-0 w-48">
+              <div className="flex-shrink-0 w-full md:w-48">
                 <a
                   href={plan.name === 'Starter Pack' 
                     ? 'https://theclosecode.co.ke/course/1-0-lead-gen/?utm_source=landing_page'
