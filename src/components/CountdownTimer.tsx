@@ -1,11 +1,11 @@
-import { Clock, AlertCircle, Zap, Flame } from 'lucide-react';
+import { Clock, AlertCircle, Flame } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { TimeRemaining } from '../hooks/useCountdown';
 
 interface CountdownTimerProps {
   timeRemaining: TimeRemaining;
   label: string;
-  variant?: 'urgent' | 'warning';
+  variant?: 'urgent' | 'warning'; // variant is unused
 }
 
 const PulseAnimation = () => (
@@ -31,7 +31,7 @@ const PulseAnimation = () => (
   `}</style>
 );
 
-export default function CountdownTimer({ timeRemaining, label, variant = 'urgent' }: CountdownTimerProps) {
+export default function CountdownTimer({ timeRemaining, label }: CountdownTimerProps) {
   const { hours, minutes, seconds, isExpired } = timeRemaining;
   const [showFlash, setShowFlash] = useState(false);
 
@@ -92,25 +92,25 @@ export default function CountdownTimer({ timeRemaining, label, variant = 'urgent
 
           <div className="flex items-center justify-center gap-1 md:gap-2">
             <div className={`flex flex-col items-center bg-white/20 backdrop-blur-md rounded-2xl px-4 py-3 min-w-[80px] border border-white/30 hover:bg-white/30 transition-all ${showFlash ? 'bg-white/40 scale-110' : ''} slide-in`}>
-              <span className="text-4xl font-black tabular-nums drop-shadow-lg">{String(hours).padStart(2, '0')}</span>
+              <span className="text-4xl font-black tabular-nums drop-shadow-lg text-slate-900">{String(hours).padStart(2, '0')}</span>
               <span className="text-xs font-bold uppercase tracking-wider opacity-95 mt-1">Hours</span>
             </div>
 
             <div className="flex flex-col items-center gap-1">
-              <span className="text-4xl font-black text-white/80">:</span>
+              <span className="text-4xl font-black text-slate-900">:</span>
             </div>
 
             <div className={`flex flex-col items-center bg-white/20 backdrop-blur-md rounded-2xl px-4 py-3 min-w-[80px] border border-white/30 hover:bg-white/30 transition-all ${showFlash ? 'bg-white/40 scale-110' : ''} slide-in`}>
-              <span className="text-4xl font-black tabular-nums drop-shadow-lg">{String(minutes).padStart(2, '0')}</span>
+              <span className="text-4xl font-black tabular-nums drop-shadow-lg text-slate-900">{String(minutes).padStart(2, '0')}</span>
               <span className="text-xs font-bold uppercase tracking-wider opacity-95 mt-1">Minutes</span>
             </div>
 
             <div className="flex flex-col items-center gap-1">
-              <span className="text-4xl font-black text-white/80">:</span>
+              <span className="text-4xl font-black text-slate-900">:</span>
             </div>
 
             <div className={`flex flex-col items-center bg-white/20 backdrop-blur-md rounded-2xl px-4 py-3 min-w-[80px] border border-white/30 hover:bg-white/30 transition-all ${showFlash ? 'bg-white/40 scale-110' : ''} slide-in`}>
-              <span className="text-4xl font-black tabular-nums drop-shadow-lg">{String(seconds).padStart(2, '0')}</span>
+              <span className="text-4xl font-black tabular-nums drop-shadow-lg text-slate-900">{String(seconds).padStart(2, '0')}</span>
               <span className="text-xs font-bold uppercase tracking-wider opacity-95 mt-1\">Seconds</span>
             </div>
           </div>

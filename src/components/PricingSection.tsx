@@ -1,12 +1,13 @@
 import { Check, Sparkles, Clock, AlertTriangle, X } from 'lucide-react';
 import CountdownTimer from './CountdownTimer';
-import { use6HourLoopCountdown, useCountdown } from '../hooks/useCountdown';
+import SmallCountdownTimer from './SmallCountdownTimer';
+import { use4HourLoopCountdown, use6HourLoopCountdown, useCountdown } from '../hooks/useCountdown';
 
 const pricingPlans = [
   {
     name: 'Elite Coaching',
     originalPrice: '18,000',
-    price: '12,999',
+    price: '14,999',
     description: '3x Weekly Coaching • 2 Weeks Intensive • Complete Access',
     features: [
       'Everything in Produle',
@@ -25,7 +26,7 @@ const pricingPlans = [
   {
     name: 'Produle',
     originalPrice: '3,500',
-    price: '2,499',
+    price: '3,499',
     description: 'Full Program Access + Weekly Support',
     features: [
       '3 Core Modules (Lead Generation, Email Marketing AI, Automations)',
@@ -59,7 +60,7 @@ const pricingPlans = [
     name: 'Starter Pack',
     originalPrice: '2,000',
     price: '100',
-    description: 'Intro Offer — Ends Nov 8, 2025',
+    description: 'Intro Offer',
     features: [
       'Lead Generation 1.0 only',
       '❌ No community access (even if paid separately)',
@@ -75,11 +76,12 @@ const pricingPlans = [
 
 export default function PricingSection() {
   const intakeCountdown = use6HourLoopCountdown();
+  const scrapCountdown = use4HourLoopCountdown();
   const freeOfferDeadline = new Date('2025-11-08T23:59:59');
   const freeOfferCountdown = useCountdown(freeOfferDeadline);
 
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+    <section id="pricing" className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(33,92,154,0.05),transparent_50%),radial-gradient(circle_at_70%_60%,rgba(255,92,53,0.05),transparent_50%)]"></div>
 
       <div className="relative max-w-7xl mx-auto px-6">
@@ -127,7 +129,7 @@ export default function PricingSection() {
                     <span className="text-xs font-bold text-amber-900 uppercase">Limited Time{plan.name === 'Starter Pack' ? ' Offer' : ''}</span>
                   </div>
                   <div className="text-xs text-amber-800 font-semibold mb-1">
-                    {plan.name === 'Starter Pack' ? 'Ends Nov 8, 2025' : 'Expires Nov 8, 2025'}
+                    {plan.name === 'Starter Pack' ? 'Intro Offer' : 'Expires Nov 8, 2025'}
                   </div>
                   <div className="flex items-center gap-1 text-xs">
                     <Clock className="w-3 h-3 text-amber-700" />
@@ -135,6 +137,11 @@ export default function PricingSection() {
                       {Math.floor(freeOfferCountdown.hours / 24)}d {freeOfferCountdown.hours % 24}h {freeOfferCountdown.minutes}m
                     </span>
                   </div>
+                  {plan.name === 'Starter Pack' && (
+                    <div className="mt-2">
+                      <SmallCountdownTimer timeRemaining={scrapCountdown} label="Module will be scrapped in" bgClass="bg-[#ff5c35]" textClass="text-white" />
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -182,10 +189,12 @@ export default function PricingSection() {
                 })}
               </ul>
 
-              <a
+                <a
                 href={
-                  plan.name === 'Elite Coaching' 
-                    ? '#'
+                  plan.name === 'Elite Coaching'
+                    ? 'https://wa.me/254700874207'
+                    : plan.name === 'Produle'
+                    ? 'https://theclosecode.co.ke/course/5-0-the-close-code-plus/'
                     : plan.name === 'Starter Pack'
                     ? 'https://theclosecode.co.ke/course/1-0-lead-gen/?utm_source=landing_page'
                     : `https://theclosecode.co.ke/courses/?utm_source=landing_page`
@@ -230,14 +239,20 @@ export default function PricingSection() {
                     <span className="text-xs font-bold text-amber-900 uppercase">Limited Time{plan.name === 'Starter Pack' ? ' Offer' : ''}</span>
                   </div>
                   <div className="text-xs text-amber-800 font-semibold mb-1">
-                    {plan.name === 'Starter Pack' ? 'Ends Nov 8, 2025' : 'Expires Nov 8, 2025'}
+                    {plan.name === 'Starter Pack' ? 'Intro Offer' : 'Expires Nov 8, 2025'}
                   </div>
-                  <div className="flex items-center gap-1 text-xs">
-                    <Clock className="w-3 h-3 text-amber-700" />
-                    <span className="font-mono text-amber-900">
-                      {Math.floor(freeOfferCountdown.hours / 24)}d {freeOfferCountdown.hours % 24}h {freeOfferCountdown.minutes}m
-                    </span>
-                  </div>
+                  {plan.name === 'Starter Pack' ? (
+                    <div className="mt-1">
+                      <SmallCountdownTimer timeRemaining={scrapCountdown} label="Module will be scrapped in" bgClass="bg-[#ff5c35]" textClass="text-white" />
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1 text-xs">
+                      <Clock className="w-3 h-3 text-amber-700" />
+                      <span className="font-mono text-amber-900">
+                        {Math.floor(freeOfferCountdown.hours / 24)}d {freeOfferCountdown.hours % 24}h {freeOfferCountdown.minutes}m
+                      </span>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -246,6 +261,11 @@ export default function PricingSection() {
                 <div className="mb-3">
                   <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-2">{plan.name}</h3>
                   <p className="text-gray-600 text-xs leading-relaxed">{plan.description}</p>
+                  {plan.name === 'Starter Pack' && (
+                    <div className="mt-2 md:mt-2">
+                      <SmallCountdownTimer timeRemaining={scrapCountdown} label="Module will be scrapped in" bgClass="bg-[#ff5c35]" textClass="text-white" />
+                    </div>
+                  )}
                 </div>
 
                 <div className="mb-2">

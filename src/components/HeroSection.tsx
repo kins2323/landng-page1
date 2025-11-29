@@ -14,9 +14,9 @@ export default function HeroSection() {
             </div>
 
             <h1 className="text-5xl lg:text-7xl font-extrabold leading-tight mb-6 text-slate-900">
-              Land Your First Client in
+              Learn skills to land your &nbsp;
               <span className="block mt-2 bg-gradient-to-r from-[#ff5c35] to-[#215c9a] bg-clip-text text-transparent">
-                90 Days or Less
+                first, Second or third client
               </span>
             </h1>
 
@@ -27,11 +27,11 @@ export default function HeroSection() {
             <div className="space-y-3 mb-12">
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0" />
-                <span className="text-lg text-gray-700">Proven framework to help you land your first client</span>
+                <span className="text-lg text-gray-700">Skill to help you land your first client</span>
               </div>
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0" />
-                <span className="text-lg text-gray-700">No experience required - start from zero</span>
+                <span className="text-lg text-gray-700">Start from zero</span>
               </div>
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0" />
@@ -41,14 +41,14 @@ export default function HeroSection() {
 
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <a 
-                href="https://theclosecode.co.ke/courses/?utm_source=landing_page"
+                  href="#pricing"
                 className="group bg-gradient-to-r from-[#ff5c35] to-[#ff7a5c] text-white px-10 py-5 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3"
               >
                 Start Your Journey
                 <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
               </a>
               <a 
-                href="#"
+                href="https://panel.kinovadigitalmarketing.com/form/8dc3b627-f64d-4b4f-b909-d441c47f1466"
                 className="group bg-white border-2 border-[#215c9a] text-[#215c9a] px-10 py-5 rounded-xl font-bold text-lg hover:bg-[#215c9a] hover:text-white shadow-lg transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3"
               >
                 Join Community
@@ -59,10 +59,11 @@ export default function HeroSection() {
             <div className="flex items-center gap-6 flex-wrap">
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-2">
-                  <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop" alt="Student" className="w-10 h-10 rounded-full border-2 border-white" />
-                  <img src="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop" alt="Student" className="w-10 h-10 rounded-full border-2 border-white" />
-                  <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop" alt="Student" className="w-10 h-10 rounded-full border-2 border-white" />
-                  <img src="https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop" alt="Student" className="w-10 h-10 rounded-full border-2 border-white" />
+                  {['JS', 'AM', 'RK', 'LI'].map((initial, i) => (
+                    <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-xs font-semibold text-slate-900">
+                      {initial}
+                    </div>
+                  ))}
                 </div>
                 <div>
                   <div className="flex items-center gap-1">
@@ -71,6 +72,7 @@ export default function HeroSection() {
                     ))}
                   </div>
                   <p className="text-sm text-gray-600 font-semibold">Real Success Stories</p>
+                  <p className="text-xs text-gray-500">John S., Amina M., Rachel K., Leo I.</p>
                 </div>
               </div>
             </div>
@@ -82,6 +84,9 @@ export default function HeroSection() {
               src="https://theclosecode.co.ke/wp-content/uploads/2025/09/hero-image-.webp"
               alt="Freelancer Success"
               className="relative w-full h-auto rounded-2xl shadow-2xl object-cover ring-4 ring-white"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
             />
             <div className="absolute -bottom-6 -right-6 bg-white rounded-2xl shadow-xl p-6 border-2 border-[#ff5c35]">
               <div className="flex items-center gap-3">
